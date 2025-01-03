@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from app.database import Base
 from app.products.categories.models import ProductCategory  # noqa
-from app.variations.options.models import VariationOption
 
 
 class Variation(Base):

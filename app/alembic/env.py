@@ -14,6 +14,10 @@ from app.database import Base
 from app.users.models import Users  # noqa
 from app.products.models import Product
 from app.products.categories.models import ProductCategory
+from app.products.configurations.models import ProductConfiguration
+from app.products.items.models import ProductItem
+from app.variations.models import Variation
+from app.variations.options.models import VariationOption
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

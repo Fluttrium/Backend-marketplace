@@ -12,10 +12,10 @@ app = FastAPI(title="E-Синергия")
 # Включение основных роутеров
 app.include_router(router_auth)
 app.include_router(router_users)
-#app.include_router(router_products)
+app.include_router(router_products)
 
-#app.include_router(router_variations)
-#app.include_router(router_images)
+app.include_router(router_variations)
+app.include_router(router_images)
 
 origins = [
     # 3000 - порт, на котором работает фронтенд на React.js

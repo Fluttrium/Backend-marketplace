@@ -16,4 +16,5 @@ class ProductCategory(Base):
     )
 
     products = relationship("Product", back_populates="category")
+    variation = relationship("Variation", back_populates="category")
     children_categories = relationship("ProductCategory", lazy="subquery")

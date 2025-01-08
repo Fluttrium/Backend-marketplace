@@ -17,7 +17,8 @@ class Settings(BaseSettings):
     
     @property
     def DATABASE_URL(self):
-        return "postgresql://market_b87z_user:F78oaiCLAj5Sw1D1UjIzVDWDX59lQpcg@dpg-ctt61g9u0jms73bfe0ag-a/market_b87z"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
     
     TEST_DB_HOST: str
     TEST_DB_PORT: int

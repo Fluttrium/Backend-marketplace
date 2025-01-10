@@ -24,6 +24,8 @@ from app.orders.statuses.models import OrderStatus  # noqa
 from app.shipping_methods.models import ShippingMethod  # noqa
 from app.addresses.models import Address  # noqa
 from app.addresses.countries.models import Country  # noqa
+from app.shopping_carts.items.models import ShoppingCartItem  # noqa
+from app.shopping_carts.models import ShoppingCart  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

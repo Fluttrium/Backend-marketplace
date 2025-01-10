@@ -6,11 +6,20 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.addresses.models import Address
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from app.shopping_carts.models import ShoppingCart
+
+
+class Role(Base):
+    __tablename__ = "roles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True)
+
+    users: Mapped[list["Users"]] = relationship("Users", back_populates="role")
 
 
 class Users(Base):
     __tablename__ = "users"
-
 
     id: Mapped[uuid.UUID] = mapped_column(
         PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, nullable=False
@@ -25,21 +34,14 @@ class Users(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
-    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), nullable=True)
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"), nullable=True, default=1)
 
     addresses: Mapped[list["Address"]] = relationship(
         back_populates="users_living",
         secondary="address_user",
     )
-
+    shopping_cart = relationship("ShoppingCart", back_populates="user")
     orders = relationship("Order", back_populates="user")
     role: Mapped["Role"] = relationship("Role", back_populates="users")
 
 
-class Role(Base):
-    __tablename__ = "roles"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(unique=True)
-
-    users: Mapped[list["Users"]] = relationship("Users", back_populates="role")

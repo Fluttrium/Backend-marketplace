@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response,HTTPException
+from app.logger import logger
 
 from app.exceptions import (
     CannotAddDataToDatabase,
@@ -22,13 +23,44 @@ router_users = APIRouter(
 
 @router_auth.post("/register", status_code=201)
 async def register_user(user_data: SUserAuth):
-    existing_user = await UserDAO.find_one_or_none(email=user_data.email)
-    if existing_user:
-        raise UserAlreadyExistsException
-    hashed_password = get_password_hash(user_data.password)
-    new_user = await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
-    if not new_user:
-        raise CannotAddDataToDatabase
+    """
+    Регистрация нового пользователя.
+    """
+    try:
+        # Проверяем, существует ли пользователь
+        existing_user = await UserDAO.find_one_or_none(email=user_data.email)
+        if existing_user:
+            raise UserAlreadyExistsException
+
+        # Хэшируем пароль
+        hashed_password = get_password_hash(user_data.password)
+
+        # Добавляем нового пользователя
+        new_user = await UserDAO.add(
+            email=user_data.email,
+            hashed_password=hashed_password,
+            first_name=user_data.first_name,
+            last_name=user_data.last_name,
+        )
+
+        # Проверяем успешность добавления
+        if not new_user:
+            raise CannotAddDataToDatabase
+
+        # Возвращаем информацию о новом пользователе
+        return {"id": str(new_user.id), "email": new_user.email}
+
+    except UserAlreadyExistsException:
+        logger.warning(f"User already exists: {user_data.email}")
+        raise HTTPException(status_code=400, detail="User already exists")
+
+    except CannotAddDataToDatabase:
+        logger.error(f"Failed to add user to database: {user_data.email}")
+        raise HTTPException(status_code=500, detail="Failed to add user to database")
+
+    except Exception as e:
+        logger.error(f"Unhandled exception during registration: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @router_auth.post("/login")

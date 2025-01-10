@@ -2,6 +2,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import delete, insert, select, update
 from app.utils.manage import manage_session
+from app.logger import logger
 
 from app.database import async_session_maker
 
@@ -53,10 +54,16 @@ class BaseDAO:
 
         @classmethod
         async def add(cls, **data):
-            async with async_session_maker() as session:
-                query = insert(cls.model).values(**data)
-                await session.execute(query)
-                await session.commit()
+            """Добавление нового объекта и возврат созданного объекта"""
+            try:
+                async with async_session_maker() as session:
+                    query = insert(cls.model).values(**data).returning(cls.model)
+                    result = await session.execute(query)
+                    await session.commit()
+                    return result.scalar_one()
+            except SQLAlchemyError as e:
+                logger.error(f"Error adding to {cls.model.__name__}: {e}")
+                raise
 
         @classmethod
         @manage_session

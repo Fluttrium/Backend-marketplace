@@ -31,5 +31,9 @@ class ProductItem(Base):
         back_populates="product_items",
         secondary="configuration_product",
     )
+    products_in_order = relationship(
+        "OrderLine", back_populates="product_item"
+    )
+
 
 

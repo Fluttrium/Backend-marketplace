@@ -18,6 +18,12 @@ from app.products.configurations.models import ProductConfiguration
 from app.products.items.models import ProductItem
 from app.variations.models import Variation
 from app.variations.options.models import VariationOption
+from app.orders.lines.models import OrderLine  # noqa
+from app.orders.models import Order  # noqa
+from app.orders.statuses.models import OrderStatus  # noqa
+from app.shipping_methods.models import ShippingMethod  # noqa
+from app.addresses.models import Address  # noqa
+from app.addresses.countries.models import Country  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

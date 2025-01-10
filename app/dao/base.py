@@ -12,10 +12,11 @@ class BaseDAO:
         @classmethod
         async def find_by_id(
                 cls,
-                model_id,
+                **data,
         ) -> model:
             async with async_session_maker() as session:
-                query = select(cls.model).filter_by(id=model_id)
+                query = insert(cls.model).values(**data).returning(cls.model)
+
 
                 result = await session.execute(query)
 

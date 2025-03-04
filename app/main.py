@@ -17,6 +17,7 @@ app.include_router(router_products)
 app.include_router(router_variations)
 app.include_router(router_images)
 
+
 origins = [
     # 3000 - порт, на котором работает фронтенд на React.js
     "http://localhost:3000",

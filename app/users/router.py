@@ -32,7 +32,6 @@ async def register_user(user_data: SUserAuth):
         if existing_user:
             raise UserAlreadyExistsException
 
-        # Хэшируем пароль
         hashed_password = get_password_hash(user_data.password)
 
         # Добавляем нового пользователя
